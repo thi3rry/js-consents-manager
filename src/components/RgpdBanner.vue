@@ -2,13 +2,15 @@
   <div class="banner banner_bottom">
     <div class="banner-inner">
 
-      <div class="banner-inner-actions">
+      <div class="banner-inner__consents-actions">
         <button @click="acceptNecessary">Accepter uniquement la collecte nécessaire au fonctionnement</button>
-        <button @click="openModal()">Modifier mes choix</button>
         <button @click="acceptAll">Accepter tout</button>
         <button @click="refuseAll">Refuser tout</button>
       </div>
-      <button @click="hideBanner()" class="banner-inner__close">X</button>
+      <div class="banner-inner__actions">
+        <button @click="hideBanner()" class="hide-banner">X</button>
+        <button @click="openModal()" class="open-modal">Modifier mes&nbsp;choix</button>
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +35,6 @@ export default {
 <style lang="scss" scoped>
 .banner {
   position: absolute;
-  padding: 1em;
   left: 0;
   right: 0;
   background-color: cornflowerblue;
@@ -48,28 +49,62 @@ export default {
   }
 
   &-inner {
-    position: relative;
-    &__close {
-      position: absolute;
-      padding: 1rem;
-      top: -1rem;
-      right: -1rem;
-      border: none;
-      background-color: transparent;
-      color: black;
-      cursor: pointer;
-      &:hover, &:focus, &:active {
-        backdrop-filter: brightness(95%);
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    @media screen and (min-width: 426px) {
+      flex-direction: row;
+    }
+    &__actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: end;
+      @media screen and (min-width: 426px) {
+        flex-direction: column;
+      }
+      .hide-banner, .open-modal {
+        &::before {
+          display: inline-block;
+          height: .5rem;
+          width: .5rem;
+        }
+        padding: .5rem;
+        border: none;
+        background-color: transparent;
+        color: black;
+        cursor: pointer;
+        text-align: right;
+        &:hover, &:focus, &:active {
+          backdrop-filter: brightness(95%);
+        }
       }
     }
-    &-actions {
+
+    &__consents-actions {
+      padding: .5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+
+      @media screen and (min-width: 426px) {
+        flex-direction: row;
+      }
       button {
         border: none;
         cursor: pointer;
-        padding: 1rem;
-        margin-right: .5rem;
+        padding: .5rem;
+        margin-bottom: .5rem;
         &:last-child {
-          margin-right: 0;
+          margin-bottom: 0;
+        }
+        @media screen and (min-width: 426px) {
+          margin-bottom: 0;
+          margin-right: .5rem;
+          &:last-child {
+            margin-right: 0;
+          }
         }
         &:hover {
           backdrop-filter: brightness(95%) blur(1px);
