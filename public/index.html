@@ -11,7 +11,16 @@
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="app"></div>
+
+    <div data-ssd-rgpd-modal='{"banner": true, "modal":false, "onClick": "openmodal"}'>
+        <a href="#">Gérer mes choix</a>
+    </div>
+    <script>
+        window.addEventListener('ssd-rgpd-loaded', (e) => {
+            const {createRgpdApp} = e.detail;
+            createRgpdApp('[data-ssd-rgpd-modal]');
+        })
+    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>
