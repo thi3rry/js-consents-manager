@@ -1,4 +1,6 @@
-# ssd-rgpd-modal
+# JS Consents Manager
+
+A project aim to help developers to manage users data usage consents by their own without extra services
 
 ## Project setup
 ```
