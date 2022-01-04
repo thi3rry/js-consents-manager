@@ -1,5 +1,5 @@
 <template>
-  <div v-html="defaultContent" @click.prevent="click"></div>
+  <div v-html="defaultContent" v-open-modal v-show-banner></div>
   <RgpdBanner
     @openModal="openModal"
     v-if="!bannerShouldHide"
@@ -20,13 +20,29 @@ export default {
   props: {
     defaultContent: String,
     banner: { type: Boolean, default: () => true},
-    modal: { type: Boolean, default: () => false},
-    onClick: {
-      type: String,
-      default: () => 'openModal',
-      validator: function (value) {
-        // La valeur passée doit être l'une de ces chaines de caractères
-        return ['openModal', 'showBanner'].indexOf(value) !== -1
+    modal: { type: Boolean, default: () => false}
+  },
+  directives: {
+    openModal: {
+      mounted(el, binding) {
+        const openModalElements = el.querySelectorAll('[data-open-modal]')
+        openModalElements.forEach((openModalEl)=> {
+          openModalEl.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            binding.instance.openModal(ev)
+          })
+        })
+      }
+    },
+    showBanner: {
+      mounted(el, binding) {
+        const showBannerElements = el.querySelectorAll('[data-show-banner]')
+        showBannerElements.forEach((showBannerEl)=> {
+          showBannerEl.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            binding.instance.showBanner(ev);
+          })
+        })
       }
     }
   },
