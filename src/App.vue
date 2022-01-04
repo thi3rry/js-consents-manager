@@ -4,6 +4,11 @@
     @openModal="openModal"
     v-if="!bannerShouldHide"
     @hideBanner="hideBanner"
+    :acceptNecessaryBtn="bannerAcceptNecessaryBtn"
+    :acceptAllBtn="bannerAcceptAllBtn"
+    :openModalBtn="bannerOpenModalBtn"
+    :refuseAllBtn="bannerRefuseAllBtn"
+    :hideBannerBtn="bannerHideBtn"
   ></RgpdBanner>
   <RgpdModal v-if="!modalShouldClose"
     @closeModal="closeModal"
@@ -20,7 +25,12 @@ export default {
   props: {
     defaultContent: String,
     banner: { type: Boolean, default: () => true},
-    modal: { type: Boolean, default: () => false}
+    modal: { type: Boolean, default: () => false},
+    bannerAcceptNecessaryBtn: { type: Boolean, default: () => false},
+    bannerHideBtn: { type: Boolean, default: () => true},
+    bannerAcceptAllBtn: { type: Boolean, default: () => true},
+    bannerOpenModalBtn: { type: Boolean, default: () => true},
+    bannerRefuseAllBtn: { type: Boolean, default: () => true},
   },
   directives: {
     toggleModal: {

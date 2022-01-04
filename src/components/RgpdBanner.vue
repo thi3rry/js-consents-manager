@@ -3,13 +3,13 @@
     <div class="banner-inner">
 
       <div class="banner-inner__consents-actions">
-        <button @click="acceptNecessary">Accepter uniquement la collecte nécessaire au fonctionnement</button>
-        <button @click="acceptAll">Accepter tout</button>
-        <button @click="refuseAll">Refuser tout</button>
+        <button v-if="acceptNecessaryBtn" @click="acceptNecessary">Accepter uniquement la collecte nécessaire au fonctionnement</button>
+        <button v-if="acceptAllBtn" @click="acceptAll">Accepter tout</button>
+        <button v-if="refuseAllBtn" @click="refuseAll">Refuser tout</button>
       </div>
       <div class="banner-inner__actions">
-        <button @click="hideBanner()" class="hide-banner">X</button>
-        <button @click="openModal()" class="open-modal">Modifier mes&nbsp;choix</button>
+        <button v-if="hideBannerBtn" @click="hideBanner()" class="hide-banner">X</button>
+        <button v-if="openModalBtn" @click="openModal()" class="open-modal">Modifier mes&nbsp;choix</button>
       </div>
     </div>
   </div>
@@ -22,6 +22,13 @@
 
 export default {
   emits: ['open-modal', 'hide-banner'],
+  props: {
+    acceptNecessaryBtn: { type: Boolean, default: () => true},
+    acceptAllBtn: { type: Boolean, default: () => true},
+    openModalBtn: { type: Boolean, default: () => true},
+    refuseAllBtn: { type: Boolean, default: () => true},
+    hideBannerBtn: { type: Boolean, default: () => true},
+  },
   methods: {
     hideBanner() {
       this.$emit('hide-banner')
