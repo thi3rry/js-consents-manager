@@ -127,6 +127,7 @@ export default {
       this.$ssdStorage.setItem('rgpd-modal-closed', (new Date()).toISOString());
       this.modalShouldClose = true;
     },
+    acceptAll() {},
     consentsUpdate(consents) {
       this.$ssdStorage.setItem('rgpd-consents', consents);
       console.log('consentements mis à jour', consents);

@@ -23,10 +23,6 @@
         <section class="modal-body" id="modal-body">
           <slot name="body">Body goes here ...</slot>
         </section>
-
-        <footer class="modal-footer">
-          <slot name="footer">Footer goes here ...</slot>
-        </footer>
       </div>
     </div>
   </div>

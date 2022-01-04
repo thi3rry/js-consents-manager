@@ -4,35 +4,37 @@
       <h2>Utilisation de vos données</h2>
     </template>
     <template #body>
-      <ConsentRow
-        v-model:consent="consents.necessary"
-        title="Cookies nécessaires au bon fonctionnement du site"
-      ></ConsentRow>
-      <ConsentRow
-        v-model:consent="consents.marketing"
-        title="Cookies marketing"
-      ></ConsentRow>
-      <ConsentRow
-        v-model:consent="consents.analytics"
-        title="Cookies de mesure d'audience"
-      ></ConsentRow>
-    </template>
-    <template #footer>
-      <div class="actions">
-        <button @click="saveChoices">Enregistrer mes consentements</button>
-        <button @click="removeChoices">Supprimer mes consentements</button>
-        <button @click="acceptNecessary">Accepter uniquement la collecte nécessaire au fonctionnement</button>
-        <button @click="acceptAll">Accepter tout</button>
-        <button @click="refuseAll">Refuser tout</button>
-      </div>
+      <Confirm ref="confirm" @confirm="confirmed = true" @cancel="confirmed = false">
+        <ConsentRow
+          v-model:consent="consents.necessary"
+          title="Données nécessaires au bon fonctionnement du site"
+          messageIfNoConsent="Ces données si elles ne sont pas acceptées peuvent nuire à votre navigation sur notre site."
+        ></ConsentRow>
+        <ConsentRow
+          v-model:consent="consents.marketing"
+          title="Cookies marketing"
+        ></ConsentRow>
+        <ConsentRow
+          v-model:consent="consents.analytics"
+          title="Cookies de mesure d'audience"
+        ></ConsentRow>
+        <div class="actions">
+          <button @click="saveChoices">Enregistrer mes consentements</button>
+          <button @click="removeChoices">Supprimer mes consentements</button>
+          <button @click="acceptNecessary">Accepter uniquement la collecte nécessaire au fonctionnement</button>
+          <button @click="acceptAll">Accepter tout</button>
+          <button @click="refuseAll">Refuser tout</button>
+        </div>
+      </Confirm>
     </template>
   </Modal>
 </template>
 <script>
 import Modal from "./Modal";
 import ConsentRow from "./ConsentRow";
+import Confirm from "./Confirm";
 export default {
-  components: {ConsentRow, Modal},
+  components: {Confirm, ConsentRow, Modal},
   data() {
     return {
       // store date of choices done
@@ -79,21 +81,26 @@ export default {
     }
   },
   methods: {
-    closeModal(doNotconfirmNecessary = false) {
-      if(!doNotconfirmNecessary && !this.consents.necessary) {
-        if (confirm("Les cookies nécessaires au bon fonctionnement du site n'ont pas été accepté, votre navigation risque d'être troublée.")) {
-          this.$emit('close-modal');
-        }
+    closeModal(doNotConfirmNecessary = false) {
+      doNotConfirmNecessary = doNotConfirmNecessary || this.confirmed;
+      if(!doNotConfirmNecessary && !this.consents.necessary) {
+        this.$refs.confirm.confirm({
+          message: "Les cookies nécessaires au bon fonctionnement du site n'ont pas été accepté, votre navigation risque d'être troublée. Êtes-vous sûr de vouloir refuser l'utilisation de données 'nécessaires' ? ",
+        }).then((confirm) => {
+          console.log('confirm finished', confirm)
+          if (confirm) {
+            this.$emit('close-modal');
+          }
+        })
       }
       else {
         this.$emit('close-modal');
       }
-
     },
-    closeModalTimeout(doNotconfirmNecessary = false, timeout = 250) {
+    closeModalTimeout(doNotConfirmNecessary = false, timeout = 250) {
       this.$nextTick(() => {
         setTimeout(() => {
-          this.closeModal(doNotconfirmNecessary);
+          this.closeModal(doNotConfirmNecessary);
         }, timeout);
       })
     },
