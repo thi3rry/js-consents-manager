@@ -1,10 +1,10 @@
 <template>
-  <Modal @closeModal="closeModal">
+  <Modal @closeModal="closeModal" :allowClose="!confirmInProgress">
     <template #header>
       <h2>Utilisation de vos données</h2>
     </template>
     <template #body>
-      <Confirm ref="confirm" @confirm="confirmed = true" @cancel="confirmed = false">
+      <Confirm ref="confirm" >
         <ConsentRow
           v-model:consent="consents.necessary"
           title="Données nécessaires au bon fonctionnement du site"
@@ -37,6 +37,7 @@ export default {
   components: {Confirm, ConsentRow, Modal},
   data() {
     return {
+      confirmInProgress: false,
       // store date of choices done
       consentsRemovedAt: null,
       consentsUpdatedAt: null,
@@ -84,13 +85,18 @@ export default {
     closeModal(doNotConfirmNecessary = false) {
       doNotConfirmNecessary = doNotConfirmNecessary || this.confirmed;
       if(!doNotConfirmNecessary && !this.consents.necessary) {
+        this.confirmInProgress = true;
         this.$refs.confirm.confirm({
           message: "Les cookies nécessaires au bon fonctionnement du site n'ont pas été accepté, votre navigation risque d'être troublée. Êtes-vous sûr de vouloir refuser l'utilisation de données 'nécessaires' ? ",
-        }).then((confirm) => {
+        })
+        .then((confirm) => {
           console.log('confirm finished', confirm)
           if (confirm) {
             this.$emit('close-modal');
           }
+        })
+        .finally(() => {
+          this.confirmInProgress = false;
         })
       }
       else {
