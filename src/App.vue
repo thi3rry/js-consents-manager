@@ -1,5 +1,5 @@
 <template>
-  <div v-html="defaultContent" v-open-modal v-show-banner></div>
+  <div v-html="defaultContent" v-toggle-modal v-toggle-banner v-open-modal v-show-banner></div>
   <RgpdBanner
     @openModal="openModal"
     v-if="!bannerShouldHide"
@@ -23,6 +23,17 @@ export default {
     modal: { type: Boolean, default: () => false}
   },
   directives: {
+    toggleModal: {
+      mounted(el, binding) {
+        const openModalElements = el.querySelectorAll('[data-toggle-modal]')
+        openModalElements.forEach((openModalEl)=> {
+          openModalEl.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            binding.instance.toggleModal(ev)
+          })
+        })
+      }
+    },
     openModal: {
       mounted(el, binding) {
         const openModalElements = el.querySelectorAll('[data-open-modal]')
@@ -30,6 +41,17 @@ export default {
           openModalEl.addEventListener('click', (ev) => {
             ev.preventDefault();
             binding.instance.openModal(ev)
+          })
+        })
+      }
+    },
+    toggleBanner: {
+      mounted(el, binding) {
+        const showBannerElements = el.querySelectorAll('[data-toggle-banner]')
+        showBannerElements.forEach((showBannerEl)=> {
+          showBannerEl.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            binding.instance.toggleBanner(ev);
           })
         })
       }
@@ -74,6 +96,12 @@ export default {
           this.showBanner()
         break;
       }
+    },
+    toggleBanner() {
+      this.bannerShouldHide = !this.bannerShouldHide;
+    },
+    toggleModal() {
+      this.modalShouldClose = !this.modalShouldClose;
     },
     showBanner() {
       this.bannerShouldHide = false;
